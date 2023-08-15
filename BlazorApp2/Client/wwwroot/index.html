@@ -10,7 +10,7 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="BlazorApp2.Client.styles.css" rel="stylesheet" />
     <script src="https://unpkg.com/imask"></script>
-    <script src="js/masked-input.js"></script>
+    <!--<script src="js/masked-input.js"></script>-->
 </head>
 
 <body>
@@ -23,5 +23,44 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
+<script>
+    function applyMask(elementId, mask) {
+        const element = document.getElementById(elementId);
+        const maskOptions = {
+            mask: [
+                {
+                    mask: '+00 {21} 0 000 0000',
+                    startsWith: '30',
+                    lazy: false,
+                    country: 'Greece'
+                },
+                {
+                    mask: '+0 000 000-00-00',
+                    startsWith: '7',
+                    lazy: false,
+                    country: 'Russia'
+                },
+                {
+                    mask: '+00-0000-000000',
+                    startsWith: '91',
+                    lazy: false,
+                    country: 'India'
+                },
+                {
+                    mask: '0000000000000',
+                    startsWith: '',
+                    country: 'unknown'
+                }
+            ],
+            dispatch: (appended, dynamicMasked) => {
+                const number = (dynamicMasked.value + appended).replace(/\D/g, '');
 
+                return dynamicMasked.compiledMasks.find(m => number.indexOf(m.startsWith) === 0);
+            }
+        };
+        const maskInstance = IMask(element, maskOptions);
+
+        return maskInstance;
+    }
+</script>
 </html>

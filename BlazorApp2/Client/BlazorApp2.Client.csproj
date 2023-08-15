@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Shared\BlazorApp2.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>
