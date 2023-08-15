@@ -47,11 +47,18 @@
                     country: 'India'
                 },
                 {
+                    mask: '+375 00 000-00-00',
+                    startsWith: '375',
+                    lazy: false,
+                    country: 'Belarus'
+                },
+                {
                     mask: '0000000000000',
                     startsWith: '',
                     country: 'unknown'
                 }
-            ],
+            ]
+            ,
             dispatch: (appended, dynamicMasked) => {
                 const number = (dynamicMasked.value + appended).replace(/\D/g, '');
 
