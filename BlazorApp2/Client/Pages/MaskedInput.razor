@@ -1,0 +1,64 @@
+﻿@page "/masked-input"
+@using System.Globalization
+@inject IJSRuntime jsRuntime
+
+<h3 class="mb-4">Masked Input Example</h3>
+
+<div class="input-container">
+    <label for="customInput">Custom Input:</label>
+    <input id="customInput" @ref="customInput" type="text" class="form-control" />
+    <button @onclick="AddDate" class="btn btn-primary ml-3">Add</button>
+</div>
+
+<div class="mt-4">
+    <h4>Added Dates</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var date in addedDates)
+            {
+                <tr>
+                    <td>@date.ToString("yyyy/MM/dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .input-container {
+        display: flex;
+        align-items: center;
+    }
+
+    #customInput {
+        flex: 1;
+    }
+</style>
+
+@code {
+    private ElementReference customInput;
+    private List<DateTime> addedDates = new List<DateTime>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jsRuntime.InvokeVoidAsync("applyCustomMask", customInput);
+        }
+    }
+
+    private async Task AddDate()
+    {
+        var inputValue = await jsRuntime.InvokeAsync<string>("getInputValue", customInput);
+        if (DateTime.TryParseExact(inputValue, "yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+        {
+            addedDates.Add(date);
+            StateHasChanged();
+        }
+    }
+}
